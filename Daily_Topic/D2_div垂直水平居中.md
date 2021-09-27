@@ -8,6 +8,7 @@
 
 <!-- flex布局 -->
 ```css
+//一定要记住是为父元素设置的属性
 div.parent {
     display: flex;
     justify-content: center;
@@ -16,6 +17,7 @@ div.parent {
 ```
 1. 定宽高
   1. 使用定位+margin
+
     ```css
     element.style {
       position: absolute;
@@ -41,6 +43,7 @@ div.parent {
     }
     ```
   2. 使用定位+transfrom
+
     ```css
     element.style {
       position: absolute;
@@ -54,6 +57,7 @@ div.parent {
     }
     ```
   3. table-cell
+
     ```css
     .parent {
         display: table-cell;
@@ -69,7 +73,7 @@ div.parent {
         height: 100px;
         background-color: blue;
 }
-   
+
     ```
 
 ```css
@@ -88,7 +92,7 @@ div.parent {
       z-index: 1;
       transform: translate3d(-50%, -50%, 0)
     }
-    ```
+   ```
     2. <<css世界>>中的方法
       ```css
       div.parent {
