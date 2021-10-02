@@ -10,7 +10,7 @@ flex意为“弹性布局”， 用来为盒状模型提供最大的灵活性
 }
 ```
 
-*在设为flex布局之后，子元素的``float`、`clear`和`vertial-align`属性都会失效*
+*在设为flex布局之后，子元素的``float`、`clear`和`vertial-align`属性都会失效*。弹性盒子沿着主轴排列。
 
 容器的属性：
 
@@ -44,7 +44,7 @@ flex意为“弹性布局”， 用来为盒状模型提供最大的灵活性
 
 ```css
 .box {
-  justify-content: flex-start | flex-end | center | space-between | space-around;
+  justify-content: flex-start | flex-end | center | space-between | space-around|space-evenly
 }
 ```
 

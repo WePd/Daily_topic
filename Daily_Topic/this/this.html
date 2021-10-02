@@ -1,0 +1,173 @@
+<script>
+  // ep1
+  //   var name = 'windowName';
+  //   function fn(){
+  //     var name = 'li';
+  //     console.log(this.name); //windowNmae
+  //     console.log("inner"+ this); // window
+  //   } 
+  //   //调用fn()的对象是window.那么this就会指向window
+  // fn()
+  // console.log("outer:" + this); // outer: window
+
+  // // ep2
+  // var name = 'windowName';
+  // q = {
+  //   a: 'li',
+  //   fn: function(){
+  //     console.log(this.a)
+  //     console.log(this)
+  //   }
+  // }
+  // //最后调用fn()的对象是q,则this就会指向q
+  // // q.fn()
+  // //要看最后是谁调用的
+  // window.q.fn()
+  // ep3
+  // var name = 'windowName';
+  // var a = {
+  //   name: null,
+  //   fn(){
+  //     console.log(this)  //window
+  //   }
+  // }
+  // //函数的值是通过引用传递的
+  // //这个地方函数fn()并没有执行，只是将指向函数的指针赋给了f,最后调用fn()的对象是window
+  // let f = a.fn;
+  // f() 
+  //箭头函数
+  // var name = 'windowName';
+  // var a = {
+  //   name: 'li',
+  //   fun1(){
+  //     console.log(this.name)
+  //   },
+  //   fun2(){
+  //     console.log(this)
+  //     //setTimeout()是window的方法。这个地方若是不使用箭头函数的话，this的指向的是wwindow
+  //     //使用箭头函数之后改变了this的指向。让他指向对象a
+  //     setTimeout(() => {
+  //       console.log(this)
+  //       this.fun1()
+  //     }, 100)
+  //   }
+  // }
+  // a.fun2()
+  //箭头函数
+  // var name = 'windowName';
+  // var a = {
+  //   name: 'li',
+  //   fun1(){
+  //     console.log(this.name)
+  //   },
+  //   fun2(){
+  //     console.log(this);
+  //     setTimeout(function fn() {
+  //       console.log(this)//window
+  //     }, 100)
+  //   }
+  // }
+  // a.fun2()
+  //箭头函数
+  // var name = 'windowName';
+  // var a = {
+  //   name: 'li',
+  //   fun1(){
+  //     console.log(this.name)//li
+  //   },
+  //   fun2(){
+  //     //这个时候的this是指向对象a的。
+  //     console.log(this)// a
+  //     //将指向this的指针赋值给_this,那么_this就指向对象a
+  //     _this = this
+  //     console.log(_this) //a 
+  //     setTimeout(() => {
+  //       _this.fun1()
+  //       console.log(_this)//  a
+  //     }, 100)
+  //   }
+  // }
+  // a.fun2()
+
+
+  // var name = 'windowName';
+  // var a = {
+  //   name: 'li',
+  //   fun1(){
+  //     console.log(this.name)//li
+  //   },
+  //   fun2(){
+  //     //这个时候的this是指向对象a的。
+  //     console.log(this)// a
+  //     //将指向this的指针赋值给_this,那么_this就指向对象a
+  //     _this = this
+  //     console.log(_this) //a 
+  //     setTimeout(function fn() {
+  //       _this.fun1()
+  //       console.log(_this)//  a
+  //     }, 100)
+  //   }
+  // }
+  // a.fun2()
+
+
+  // var name = "111";
+  // var a = {
+  //   name: '222',
+  //   fn: {
+  //     name: '333',
+  //     func: function () {
+  //       console.log(this);
+  //       // this.name = '4444'
+  //       console.log(this.name);
+  //     }
+  //   }
+  // }
+  // var f = a.fn.func; 
+  // f(); 
+  // a.fn.func() 
+  // 444
+//call()调用构造函数
+// function Product(name, price){
+//   this.name = name;
+//   this.price = price;
+// }
+// function Food(name, price){
+//   Product.call(this, name, price);
+//   console.log(this)
+//   this.category = 'food';
+// }
+// function Toy(name, price){
+//   Product.call(this, name, price);
+//   thi.category = 'Toy'
+// }
+
+// var cheese = new Food("fate", 10)
+// console.log(cheese);
+// console.log(c);
+// var animals = [
+//   { species: 'Lion', name: 'King' },
+//   { species: 'Whale', name: 'Fail' }
+// ];
+
+// for (var i = 0; i < animals.length; i++) {
+//   (function(i) {
+//     this.print = function() {
+//       console.log('#' + i + ' ' + this.species
+//                   + ': ' + this.name);
+//     }
+//     this.print();
+//   }).call(animals[i], i);
+// }
+
+
+var data = 'li';
+function play(){
+  console.log(this); //window
+  console.log(this.data); //li
+  //这个时候this是指向全局对象window的，那么值就会是li.
+  //但是若最初的变量声明是用let声明就会有不同的结果
+}
+//没有传递第一个参数
+play.call()
+</script>
