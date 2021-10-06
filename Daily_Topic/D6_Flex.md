@@ -10,7 +10,7 @@ flex意为“弹性布局”， 用来为盒状模型提供最大的灵活性
 }
 ```
 
-*在设为flex布局之后，子元素的``float`、`clear`和`vertial-align`属性都会失效*。弹性盒子沿着主轴排列。
+*在设为flex布局之后，子元素的``float`、`clear`和`vertial-align`属性都会失效*。弹性盒子沿着主轴排列。主轴的排列默认是不会换行的，若是主轴的宽度不能容纳所有的子元素，这时子元素就会自动压缩，以方便在主轴能够排列。
 
 容器的属性：
 
@@ -54,7 +54,7 @@ flex意为“弹性布局”， 用来为盒状模型提供最大的灵活性
 
 ```css
 .box {
-  align-items: flex-start | flex-end | center | baseline | stretch;
+  align-items: flex-start | flex-end | center | baseline | stretch| space-evenly;
 }
 ```
 
@@ -67,7 +67,7 @@ baseline: 项目的第一行文字的基线对齐。
 stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。
 ```
 
-- align-content属性（定义了多轴线的对齐方式。但是如果项目只有一行，该属性是不起作用的。）
+- align-content属性（定义了多轴线的对齐方式。但是如果项目只有一行，该属性是不起作用的。）注意与`align-items`相比，属性值少了`space-evenly`
 
 ```css
 .box {
