@@ -53,6 +53,46 @@
   // }
 
   // foo()
+  // function fn(a) {
+  //   console.log(a); // function a() {alert(1)}
+  //   var a = 2;
+
+  //   function a() {
+  //     alert(1)
+  //   }
+  //   console.log(a); //2
+  // }
+  // fn(1);
+
+  // for (var i = 0, j = 1; i < 3; i++) { j += i; }
+  // console.log(j, i);
+  var money = 100
+  while (true) {
+    var choice = prompt("请输入你的选择：1: 存钱； 2：取钱 3：显示余额 4: 退出啊")
+    switch (choice) {
+      case '1':
+        var num = prompt('请输入你的存钱金额：')
+        money += Number(num)
+        alert('您的余额为：' + money)
+        break;
+      case '2':
+        var num2 = prompt('请输入你要取得金额数：')
+        if (money < Number(num2)) {
+          alert('您的余额不够，请重新输入金额')
+        } else {
+          money -= Number(num2)
+          break
+        }
+        alert('您的余额为' + money)
+        break
+      case '3':
+        alert('您的鱼儿为：' + money)
+        break
+      case '4':
+        alert("退出")
+        break
+    }
+  }
 </script>
 
 </html>
