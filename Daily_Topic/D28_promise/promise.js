@@ -70,17 +70,19 @@
 // })
 
 // 链式调用
-var p2 = new Promise(function (resolve, reject) {
-  resolve(1);
-});
+// var p2 = new Promise(function (resolve, reject) {
+//   resolve(1);
+// });
 
-p2.then(function (value) {
-  console.log(value); // 1 先输出
-  return value + 1;
-}).then(function (value) {
-  console.log(value + ' - A synchronous value works'); //2 -- A synchronous value works //最后输出
-});
+// p2.then(function (value) {
+//   console.log(value); // 1 先输出
+//   return value + 1;
+// }).then(function (value) {
+//   console.log(value + ' - A synchronous value works'); //2 -- A synchronous value works //最后输出
+// });
 
-p2.then(function (value) {
-  console.log(value); // 1 第二输出
-});
+// p2.then(function (value) {
+//   console.log(value); // 1 第二输出
+// });
+
+

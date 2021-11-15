@@ -136,6 +136,29 @@ Promise.all([promise1, promise2, promise3]).then((values) => {
 Promise.all 在任意一个传入的 promise 失败时返回失败。例如，如果你传入的 promise中，有四个 promise 在一定的时间之后调用成功函数，有一个立即调用失败函数，那么 Promise.all 将立即变为失败。
 
 
+### Promise.any()
+Promise.any接受的也是一个可迭代对象，只要其中的一个promise成功，就返回这个成功的promise.
+如果没有一个promise成功，就返回一个失败的promise和AggrefateError类型的实例，它是Error的一个子类。
+从本质上来说，promise.any和promise.all是相反的。
+
+参数： 一个可迭代的对象
+返回值： 
+- 如果传入的参数是一个空的迭代对象，就返回一个已经失败的promise
+- 如果传入的参数不包含任何promise,就返回一个异步完成的promise
+- 其他情况下都会返回一个pending的promise.只要传入的迭代对象中的任何一个promise变成成功或失败状态，那么promise就会相应异步的编程成或者失败的状态
+
+promise.any()主要是用于返回一个成功状态的promise.只要有一个promis成功这个方法就会终止。不会等待其他的promise完成
+
+与Promise.all()不同的是它不会返回一组完成值。只会得到一个成功值。
+
+
+### Promise.race()
+Promise.race(iterable) 方法返回一个 promise，一旦迭代器中的某个promise解决或拒绝，返回的 promise就会解决或拒绝
+参数： 可迭代对象
+返回值： 一个待定的 Promise 只要给定的迭代中的一个promise解决或拒绝，就采用第一个promise的值作为它的值，从而异步地解析或拒绝（一旦堆栈为空）
+
+此方法也接受一个包含需
+监视的 Promise 的可迭代对象，并返回一个新的 Promise ，但一旦来源 Promise 中有一个被解决，所返回的 Promise 就会立刻被解决。与等待所有 Promise 完成的 Promise.all() 方法不同，在来源 Promise 中任意一个被完成时， Promise.race() 方法所返回的 Promise 就能作出响应
 
 ### Promise.resolve()
 
@@ -228,3 +251,45 @@ p2.then(function (value) {
 在异步函数中抛出的错误不会被catch捕获， 且在resolve后面抛出错误也不会捕获
 
 如果是一个已经resolved的promise，将永远不会调用catch()方法。
+
+
+### Promise.prototype.finally()
+finally()方法返回一个promise, 在promise结束的时候，无论结果是成功还是失败，都会执行指定的函数。
+避免了需要在then()和catch()中写相同的代码。
+
+参数: Promise结束之后调用的函数。
+返回值： 设置了finally回调函数的promise对象。
+
+
+- 由于不知道Promise的结果，所以finally中的回调函数不带参数，只用于无论最终结果如何都要执行的情况。
+- 与Promise.resolve(2).then(() => {}, () => {}) （resolved的结果为undefined）不同，Promise.resolve(2).finally(() => {}) resolved的结果为 2。
+- 同样，Promise.reject(3).then(() => {}, () => {}) (fulfilled的结果为undefined), Promise.reject(3).finally(() => {}) rejected 的结果为 3。
+- 在finally回调中 throw（或返回被拒绝的promise）将以 throw() 指定的原因拒绝新的promise
+
+
+
+### Async
+
+将 async 关键字加到函数申明中，可以告诉它们返回的是 promise，而不是直接返回值。此外，它避免了同步函数为支持使用 await 带来的任何潜在开销。在函数声明为 async 时，JavaScript引擎会添加必要的处理，以优化你的程序
+
+```js
+async function hello() { return "Hello" };
+hello();
+
+let hello = async function() { return "Hello" };
+hello();
+
+let hello = async () => { return "Hello" };
+
+hello().then((value) => console.log(value))
+
+
+以上代码的效果都是一样的。
+
+
+```
+
+
+### Await
+
+当 await 关键字与异步函数一起使用时，它的真正优势就变得明显了 —— 事实上， await 只在异步函数里面才起作用。它可以放在任何异步的，基于 promise 的函数之前。它会暂停代码在该行上，直到 promise 完成，然后返回结果值。在暂停的同时，其他正在等待执行的代码就有机会执行了
