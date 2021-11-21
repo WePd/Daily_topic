@@ -58,3 +58,22 @@ import {add } from './index.js
 import * from './index.js'
 ```
 由于import是静态执行，所以不能使用表达式和变量，这些只有在运行时才能得到结果的语法结构
+
+
+```js
+//test1.js
+export let n = 1
+export let m = 3
+export default function (n, m) {
+  return n + m
+}
+//test2.js
+import foo, { n, m } from './test1.js'
+console.log(foo(n, m))
+console.log(n);
+console.log(m);
+
+//index.html
+ <script src="./main/test2.js" type="module">
+  </script>
+```
