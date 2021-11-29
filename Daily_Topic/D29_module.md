@@ -28,11 +28,11 @@ export {n, m, add}
 export default function add (n, m){
   return n + m
 }
-
+//默认导出相应的导入方法
 import sum from './index.js'
 ```
 可以默认导出。其他模块加载这个模块的时候， import 命令可以给要导入的模块起别名， 但是不再使用{}
-export default命令用于指定模块的默认输出。显然，一个模块只能有一个默认输出，因此export default命令只能使用一次。所以，import命令后面才不用加大括号，因为只可能唯一对应export default命令。
+export default命令用于指定模块的默认输出。*显然，一个模块只能有一个默认输出*，因此export default命令只能使用一次。所以，import命令后面才不用加大括号，因为只可能唯一对应export default命令。
 因为export default命令其实只是输出一个叫做default的变量，所以它后面不能跟变量声明语句
 export default命令的本质是将后面的值，赋给default变量，所以可以直接将一个值写在export default之后
 
