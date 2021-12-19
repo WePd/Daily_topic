@@ -106,7 +106,7 @@ const handleClick=()=>{
 
 在类组件中可以通过 componentDidUpdate 或者 setState 的第二个参数 callback 检测监听 state
 
-在函数组件中就需要 useEffect，将 state 的依赖项作为 useEffect 的第二个参数，但是要注意 useEffect 会默认执行一次。
+在函数组件中就需要 useEffect，将 state 的依赖项作为 useEffect 的第二个参数，但是要注意 useEffect 初始化会默认执行一次。
 
 ### 类组件中的 setState 和函数组件中的 useState 的异同？
 
