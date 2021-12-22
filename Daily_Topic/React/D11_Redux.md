@@ -74,3 +74,51 @@ function reducer(state = initState, action) {
   - store 通知相?ui?取新?据
   - ui?查各自的?据有?有更新。
   - ???据被更新的每??件都?制使用新?据重新渲染，?接?更新网?
+
+### Thunk使用
+`"thunks" are a pattern of writing functions with logic inside that can interact with a Redux store's dispatch and getState methods.`
+
+使用thunk需要将`redux-thunk`中间件添加到redux store中作为配置的一部分
+
+#### Thunk Function
+```js
+const thunkFunction = (dispatch, getState){
+	//可以dispatch action或者 获取state
+}
+store.dispatch(thunkFunction)
+```
+
+### Redux异步
+1. 项目安装redux-thunk
+2. 在store中，createStore()是可以传入两个参数的，第一个参数是reducer,第二个参数是applyMiddleWare的返回值storeEnhance
+
+```js
+//在store中
+//在头部要导入applyMiddleWare
+import {createStore, applyMilldeWare} from 'redux'
+
+//引入thunk中间件
+import thunk from 'redux-thunk'
+
+//应用中间件，这个函数会有一个返回值
+const storeEnhance = applyMiddleWare(thunk， 中间件2)
+
+
+const store = createStore(reducer, storeEnhance)
+```
+3. 在组件中，可以将需要异步操作的步骤都卸载ction中，定义一个函数传入一个dispatch参数
+```js
+export const getMessageMultiData = (dispatch) => {
+  axios({
+    method: "GET",
+    url: "http://123.207.32.32:8000/home/multidata",
+  }).then((res) => {
+    // console.log(res.data.data);
+    console.log("轮播图", res.data.data.banner.list);
+    console.log("推荐", res.data.data.recommend.list);
+    dispatch(changeBanners(res.data.data.banner.list))
+    dispatch(changeRecommends(res.data.data.recommend.list))
+  });
+  console.log(dispatch)
+}
+```
