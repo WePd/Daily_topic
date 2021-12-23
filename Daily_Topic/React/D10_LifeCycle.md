@@ -59,14 +59,14 @@ constructor 在类组件创建实例时调用，而且初始化的时候执行�
 - 对类组件做一些处理，比如防抖，绑定this， 节流等
 - 对类组件进行一些必要生命周期的劫持，渲染劫持
 2. getDerivedStateFromProps(nextProps, prevState)
-	- nextProps: 父组件型新传递的props，
+	- nextProps: 父组件新传递的props，
 	- prevState: 在此次跟新之前的state
 
 getDerivedStateFromProps作为类的一个静态方法执行，内部访问不到this,也就无法访问实例。更趋向于纯函数。用来替代`componentWillMount`和`componentWillReceiveProps`。
 
 主要用于在初始化和数据更新时接受父组件的props数据，对props进行格式化。返回值作为state的更新依据。
 
-每次渲染之前都会调用，不管是props改变还是state改变或者时`forceUpdate`与`componentWillReceiveProps`不同，后者只会在父组件重新渲染时触发。
+每次渲染之前都会调用，不管是props改变还是state改变或者是`forceUpdate`，与`componentWillReceiveProps`不同，后者只会在父组件重新渲染时触发。
 
 主要作用：
 	- 替代`componentWillMount`和`componentWillReceiveProps`
@@ -90,14 +90,14 @@ Jsx的各个元素被React.createElement创建成react element对象的形式。
 > snapShot为getSnapshotBeforeUpdate返回的一个快照，用于保留更新之前的DOM信息。
 
 6. componentDidMount
-componentDidMount和componentDidUpdate的执行时机时一样的。前者用于初始化，后者是组件更新。
+`componentDidMount`和`componentDidUpdate`的执行时机时一样的。前者用于初始化，后者是组件更新。
 - 这个时候DOM已经创建完毕，可以做一些基于DOM的操作，作为DOM事件监听器
 - 向服务器请求数据。
 
 
 7. shouldComponentUpdate
 > shouldComponentUpdate(newProps.newState, nextContent{})
-一般用于组件优化，它的返回值决定是否重新渲染类组件。需要重点关注的是第二个参数 newState ，如果有 getDerivedStateFromProps 生命周期 ，它的返回值将合并到 newState ，供 shouldComponentUpdate 使用
+一般用于组件优化，它的返回值决定是否重新渲染类组件。需要重点关注的是第二个参数 `newState` ，如果有 `getDerivedStateFromProps` 生命周期 ，它的返回值将合并到 newState ，供 `shouldComponentUpdate` 使用
 
 8. componentWillUnmount
 主要用于销毁组件，主要做一些收尾工作。如清除定时器，延时器。清楚事件监听
@@ -117,12 +117,44 @@ useEffect 第一个参数 callback, 返回的 destory ， destory 作为下一�
 第二个参数作为依赖项，是一个数组，可以有多个依赖项，依赖项改变，执行上一次callback 返回的 destory ，和执行新的 effect 第一个参数 callback 
 
 对于 useEffect 执行， React 处理逻辑是采用异步调用 ，对于每一个 effect 的 callback， React 会向 setTimeout回调函数一样，放入任务队列，等到主线程任务完成，DOM 更新，js 执行完成，视图绘制完毕，才执行。所以 effect 回调函数不会阻塞浏览器绘制视图
+
+
+
 2. useLayoutEffect
 与useEffect不同的是，useLayoutEffect是采用的同步执行方式。
 首先 useLayoutEffect 是在DOM 绘制之前，这样可以方便修改 DOM ，这样浏览器只会绘制一次，如果修改 DOM 布局放在 useEffect ，那 useEffect 执行是在浏览器绘制视图之后，接下来又改 DOM ，就可能会导致浏览器再次回流和重绘。而且由于两次绘制，视图上可能会造成闪现突兀的效果。
 useLayoutEffect callback 中代码执行会阻塞浏览器绘制
 
+3. componentDidMount替代方案
+```js
+React.useEffect(() => {
+	//数据请求， 操纵DOM, 事件监听， 
+},[])
+```
 
+4. componentWillUnmount()替代方案
+```js
+React.useEffect(() => {
+	return  function componentWillUnmpunt(){
+		//清除定时器 解除事件监听
+	}
+})
+```
+
+5. 在函数组件中， `componentWillReciveProps`只有组件更新props才会执行，但是`useEffect`是异步执行的且初始会默认执行一次。。
+```js
+React.useEffect(() => {
+	console.log('只有依赖的属性变化才会执行')
+},[props.name]) //之后props中的name属性变化才会执行当前的useEffect钩子
+```
+
+6. componentDidUpdata替代方案
+useEffect是异步执行的，但是componentDidUpdata是同步执行的。两者的执行时机也不相同。`componentDidUpdata`是当组件更新完毕之后才会执行。
+```js
+React.useEffect(() => {
+	console.log('组件更新完毕')
+})// 注意此时useeffect没有第二个参数，则useEffect会在函数组件每执行一次就会执行。
+```
 
 
 
