@@ -74,6 +74,50 @@ function reducer(state = initState, action) {
   - store 通知相?ui?取新?据
   - ui?查各自的?据有?有更新。
   - ???据被更新的每??件都?制使用新?据重新渲染，?接?更新网?
+### Redux中间件
+`Redux middleware provides a third-party extension point between dispatching an action, and the moment it reaches the reducer`.
+
+#### Redux使用中间件
+1. 在`store`中引入applyMiddleWare
+`import {applyMiddleWare} from redux`
+2. 导入中间件
+`import {middleWare1, middleWare2, middleWare3} from '../middelWares'`
+3. 注册中间件
+`const middleWareEbhancr = applyMiddleWare(middleWare1,middleWare2,middleWare3)`
+4. 然后将`middleWareEnahnce`加入到createStroe的第二个参数中
+`const store = createStore(reducer,middleWareEnahnce )`
+
+#### 中间件工作原理
+`Middleware form a pipeline around the store's dispatch method`-------> 中间件围`store`的分派方法形成一个管道
+当我们调用`dispatch(action)`时，实际上是调用管道中的第一个中间件，之后中间件可以做任何事, 通常它会检测action的类型是否是它所关心的类型。
+若是它想要的类型，那么它就会做相应的操作。但是若不是它想要的类型，那么它会跳过继续让下一个在管道中的中间件做检测。
+
+与reducer不同的是，reducer是一个纯函数，但是`middleWara`是可以有副作用操作的。比如一些异步的操作。
+
+*简单来说，redux中间件就是三个嵌套函数*
+```js
+standard middleware definition, with 3 nested functions:
+// 1) Accepts `{dispatch, getState}`
+// 2) Accepts `next`
+// 3) Accepts `action`
+
+const thunkMiddleware =
+  ({ dispatch, getState }) =>
+  next =>
+  action => {
+    // If the "action" is actually a function instead...
+    if (typeof action === 'function') {
+      // then call the function and pass `dispatch` and `getState` as arguments
+      return action(dispatch, getState)
+    }
+
+    // Otherwise, it's a normal action - send it onwards
+    return next(action)
+  }
+```
+- 简单来说就是若在disPatch中传入一个函数，那么thunk中间件就会查看是否是用一个函数替代了一个action对象，若是函数，那么就拦截它，就调用这个函数并将{dispatch，getState}作为他的参数。
+- 若传入的不是一个函数，就会进入next()到管道中的下一个中间件。
+
 
 ### Thunk使用
 `"thunks" are a pattern of writing functions with logic inside that can interact with a Redux store's dispatch and getState methods.`
@@ -90,7 +134,7 @@ store.dispatch(thunkFunction)
 
 ### Redux异步
 1. 项目安装redux-thunk
-2. 在store中，createStore()是可以传入两个参数的，第一个参数是reducer,第二个参数是applyMiddleWare的返回值storeEnhance
+2. 在store中，引入`redux-thunk`。createStore()是可以传入两个参数的，第一个参数是reducer,第二个参数是applyMiddleWare的返回值storeEnhance
 
 ```js
 //在store中
@@ -106,7 +150,8 @@ const storeEnhance = applyMiddleWare(thunk， 中间件2)
 
 const store = createStore(reducer, storeEnhance)
 ```
-3. 在组件中，可以将需要异步操作的步骤都卸载ction中，定义一个函数传入一个dispatch参数
+
+3. 在组件中，可以将需要异步操作的步骤都集成ction中，定义一个函数传入一个dispatch参数
 ```js
 export const getMessageMultiData = (dispatch) => {
   axios({
