@@ -30,7 +30,7 @@ class Grandfather extends React.Component {
       }
 ```
 provider作为提供者传递context,provider的value改变会使所有消费这个context的组件重新更新。
-provider可以逐层传递context,下一层的Provider会覆盖上一层的provider
+*provider可以逐层传递context,下一层的Provider会覆盖上一层的provider*
 
 
 

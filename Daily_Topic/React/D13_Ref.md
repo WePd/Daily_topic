@@ -34,7 +34,7 @@ useRef和createRef的底层是差不多的，但是有一点不一样。就是re
 #### 类组件获取Ref的三种方式
 1. Ref属性是一个字符串
 用一个字符串标记DOM元素，在底层`react`会将真实DOM绑定在`this.refs`上.
-若是一个类组件，则会将组建的实例绑定在`this.refs`上。
+若是一个类组件，则会将子组件的实例绑定在`this.refs`上。
 ![](img/ref_str.png)
 2. Ref是一个函数
 用一个函数标记ref时，会采用callback的方式，等到真实DOM创建完毕，以回调函数的方式返回。获取真实DOM和组件实例。
