@@ -7,6 +7,10 @@ React 类组件为开发者提供了一些生命周期钩子函数，能让开�
 ###  类组件生命周期
 
 React 的两个重要的阶段，render 阶段和 commit 阶段，React 在调和( render )阶段会深度遍历 React fiber 树，目的就是发现不同( diff )，
+
+在render阶段，纯洁且不包含副作用，可能会被React暂停，中止或重新启动。
+commit阶段分为pre-commit和Commit阶段，pre-commit阶段可以读取DOM,commit阶段可以使用DOM，运行副作用，安排更新。
+
 不同的地方就是接下来需要更新的地方，对于变化的组件，就会执行 render 函数。在一次调和过程完毕之后，就到了 commit 阶段，commit 阶段会创建修改真实的 DOM 节点
 
 在 React 底层，类组件会被转换为 `fiber tag = 1`
@@ -34,7 +38,7 @@ function mountClassInstance(workInProgress,ctor,newProps,renderExpirationTime){
 }
 ```
  3. getDerviedStateFromProps执行
-	在初始化阶段，getDerviedStateFromProps是要执行的第二个生命周期，它是从ctor上绑定的静态方法
+	在初始化阶段，getDerviedStateFromProps是要执行的第二个生命周期，它是从ctor上绑定的*静态*方法
 ```js
 const getDerivedStateFromProps = ctor.getDerivedStateFromProps;
 const partialState = getDerivedStateFromProps(nextProps, prevState); /* 这个时候执行 getDerivedStateFromProps 生命周期 ，得到将合并的state */
@@ -42,12 +46,26 @@ const memoizedState = partialState === null || partialState === undefined ? prev
 ```
 	传入 props ，state 。 返回值将和之前的 state 合并，作为新的 state ，传递给组件实例使用
   4. render函数
-  5. componentDidMount执行
+  5. componentDidMount执行,componentDidMount是发生在commit阶段的，一旦React调和完所有的Fibre节点，就会到commit阶段
 *执行顺序：constructor -> getDerivedStateFromProps / componentWillMount -> render -> componentDidMount*
 ![](img/life-cycle-mount.png)
+
+
 - 更新阶段
 	根据updateClassComponent函数，若发现current不为null时，说明类组件已经被挂载过，则执行更新逻辑。
+	1. 执行componentWillReceiveProps
+		首先判断getDerivedStateFromProps是否存在，若是不存在就执行componentWillReceiveProps生命周期，传入两个参数，newProps，newContext
+	2. 执行detDerviedStateRromProps返回的值用于合并state，生成新的state
+	3. 执行shouldComponentUpdate
+			传入新的 props ，新的 state ，和新的 context ，返回值决定是否继续执行 render 函数，调和子节点。这里应该注意一个问题，getDerivedStateFromProps 的			返回值可以作为新的 state ，传递给 shouldComponentUpdate 
+	4. 执行componentWillUpdate
+	5. render
+	6. 执行getSnapBeforeUpdate
+			操作发生在commit阶段，返回值将作为componentDidUpDate的第三个参数。
+	7. componetDidUpDate
+			
   ![](img/life-cycle-update.png)
+	
  - 销毁阶段
 销毁阶段就比较简单了，在一次调和更新中，如果发现元素被移除，就会打对应的 Deletion 标签 ，
 然后在 commit 阶段就会调用 componentWillUnmount 生命周期，接下来统一卸载组件以及 DOM 元素。
@@ -79,7 +97,7 @@ Jsx的各个元素被React.createElement创建成react element对象的形式。
 > getSnapshotBeforeUpDate(preState, preProps)
 > preState: 更新前的state
 > preProps: 更新前的props
-返回一个值作为一个快照，传递给componentDidUpdate的第三个参数
+可以理解为获取更新前的状态。返回一个值作为一个快照，传递给componentDidUpdate的第三个参数
 
 *getSnapshotBeforeUpdate 这个生命周期意义就是配合componentDidUpdate 一起使用，计算形成一个 snapShot 传递给 componentDidUpdate 。保存一次更新前的信息*
 
@@ -116,18 +134,21 @@ useEffect 第一个参数 callback, 返回的 destory ， destory 作为下一�
 
 第二个参数作为依赖项，是一个数组，可以有多个依赖项，依赖项改变，执行上一次callback 返回的 destory ，和执行新的 effect 第一个参数 callback 
 
-对于 useEffect 执行， React 处理逻辑是采用异步调用 ，对于每一个 effect 的 callback， React 会向 setTimeout回调函数一样，放入任务队列，等到主线程任务完成，DOM 更新，js 执行完成，视图绘制完毕，才执行。所以 effect 回调函数不会阻塞浏览器绘制视图
+对于 useEffect 执行， React 处理逻辑是采用*异步调用* ，对于每一个 effect 的 callback， React 会向 setTimeout回调函数一样，放入任务队列，等到主线程任务完成，DOM 更新，js 执行完成，视图绘制完毕，才执行。所以 effect 回调函数不会阻塞浏览器绘制视图
 
 2. useLayoutEffect
-与useEffect不同的是，useLayoutEffect是采用的同步执行方式。
-首先 useLayoutEffect 是在DOM 绘制之前，这样可以方便修改 DOM ，这样浏览器只会绘制一次，如果修改 DOM 布局放在 useEffect ，那 useEffect 执行是在浏览器绘制视图之后，接下来又改 DOM ，就可能会导致浏览器再次回流和重绘。而且由于两次绘制，视图上可能会造成闪现突兀的效果。
-useLayoutEffect callback 中代码执行会阻塞浏览器绘制
+与useEffect不同的是，useLayoutEffect是采用的*同步*执行方式。
+>首先 useLayoutEffect 是在DOM 绘制之前，这样可以方便修改 DOM ，这样浏览器只会绘制一次，如果修改 DOM 布局放在 useEffect ，那 useEffect 执行是在浏览器绘制视图之后，接下来又改 DOM ，就可能会导致浏览器再次回流和重绘。而且由于两次绘制，视图上可能会造成闪现突兀的效果。
+*useLayoutEffect callback 中代码执行会阻塞浏览器绘制*
+
+简单来说,就是若要修改DOM,改变布局就用useLayOutEffect，其他情况就用useEffect
+
 
 3. componentDidMount替代方案
 ```js
 React.useEffect(() => {
 	//数据请求， 操纵DOM, 事件监听， 
-},[])
+},[]) //dep=[]
 ```
 
 4. componentWillUnmount()替代方案
@@ -136,7 +157,7 @@ React.useEffect(() => {
 	return  function componentWillUnmpunt(){
 		//清除定时器 解除事件监听
 	}
-})
+},[]) //dep=[]
 ```
 
 5. 在函数组件中， `componentWillReciveProps`只有组件更新props才会执行，但是`useEffect`是异步执行的且初始会默认执行一次。。
