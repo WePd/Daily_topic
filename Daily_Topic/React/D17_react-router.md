@@ -154,6 +154,11 @@ Redirect 可以在路由不匹配情况下跳转指定某一路由，适合路�
 - url拼接：history.push(`/home?name=${name}&message=${msg}`)
 - state路由状态
 - 动态路径参数路由
+```js
+<Route to='/post/:id'/>
+
+history.push('/post'+ id)
+```
 
 
 

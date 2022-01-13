@@ -48,6 +48,11 @@ this.setState({ name: 1 }, () => {
 
 #### 触发 setState 之后的操作
 
+- 首先会产生当前更新的优先级
+- 接下来 react 会跟根据 fibre root 向下调和子节点，对比将要发生更新的地方，找到更新的组件。合并 state, 然后触发 render,得到新的 ui 视图。完成 render 阶段
+- 在 commit 阶段，替换真实 DOM, 完成更新流程
+- 同时在 commit 阶段会执行 setState 的 callback 函数.可以获取最新的 state 值。
+
 #### 如何限制 setState 更新视图？
 
 - `purComponent`可以对 props 和 state 进行浅比较， 若是没有发生变化，则不会更新视图<br>
