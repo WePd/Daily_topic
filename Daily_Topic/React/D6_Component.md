@@ -15,8 +15,25 @@ React 组件可以分为函数式组件和类式组件
 
 ### 类式组件
 
-react 处理 Component 的逻辑是在类组件执行构造函数的时候会在实例上绑定 props 和 context,初始化智控 ref 属性。
+react 处理 Component 的逻辑是在类组件执行构造函数的时候会在实例上绑定 props 和 context,初始化置空 ref 属性。
 在原型链上绑定 setState 和 forceUpdate 方法。
+
+```js
+function Component(props, content, updater) {
+  this.props = props;
+  this.content = content;
+  this.refs = empty;
+	this.updater = updater || ReactNoopUpdateQueue; //上面所属的updater 对象
+}
+//在Component原型上绑定setState方法
+Component.proptotype.setState = function(partialState, callback){
+	this.updater.enqueueSetState(this, partialState, callback, 'setState');
+}
+//在Component原型上绑定forceUpdate方法
+Component.prototype.forceUpdate = function(callback){
+	this.updater.enqueueForceUpdate(this, callback, 'forceUpdate');
+}
+```
 
 ```js
 //类组件的各个部分的功能
@@ -50,7 +67,7 @@ Index.prototype.handleClick = () =>
 
 自 ReactV16.8 跟新以来， 对函数组件的功能有很多强化，我们可以利用函数组件做类式组件做的任何事，在某种程度上可以说完全替代了类式组件。
 
-但是有一点， 不用给函数组件的原型上绑定属性和方法，这完全是没有用的。因为 React 对函数组件是直接调用的而不是经过 New 的。
+但是有一点，不要给函数组件的原型上绑定属性和方法，这完全是没有用的。因为 React 对函数组件是直接调用的而不是经过 New 的。
 
 ### 函数组件了类式组件的区别
 
