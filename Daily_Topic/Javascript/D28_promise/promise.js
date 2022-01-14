@@ -7,12 +7,9 @@
 
 // createAsync(msg, successCallback, failureCallback)
 
-
 // //用promise的写法
 // //createAsync返回的是一个promise对象
 // createAsync(msg).then(successCallback, failureCallback);
-
-
 
 // const myPromise = new Promise((resolve, reject) => {
 //   setTimeout(() => {
@@ -44,7 +41,6 @@
 // console.log(promise2);
 // const promise3 = Promise.all([1, 2, 3, 4, 5])
 // console.log(promise3); //{
-
 
 //! promise.resolve()
 // const promise1 = Promise.resolve(22)
@@ -85,4 +81,11 @@
 //   console.log(value); // 1 第二输出
 // });
 
-
+const promise1 = new Promise((resolve, reject) => {
+  resolve(
+    new Promise((resolve, reject) => {
+      reject("123");
+    })
+  );
+});
+promise1.then((res) => console.log(res));

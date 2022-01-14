@@ -63,9 +63,21 @@ this.setState({ name: 1 }, () => {
 ### setState 的原理
 
 对于类组件，在类组件实例化的过程中绑定了`Updater`对象，调用`setState`实质上是`React`在底层调用`Updater`的`enqueueSetState`
+```js
+//在类组件中
+Component.prototype.setState = function (state,callback ) => {
+	this.updater.enqueueSetState(this,state, callback, 'setState')
+}
+```
+enqueueSetState 作用实际很简单，就是创建一个 update ，然后放入当前 fiber 对象的待更新队列中，最后开启调度更新，
+
 
 - React 是如何实现批量更新的？
+在 React 事件执行之前通过 isBatchingEventUpdates=true 打开开关，开启事件批量更新，当该事件结束，再通过 isBatchingEventUpdates = false; 关闭开关，然后在 scheduleUpdateOnFiber 中根据这个开关来确定是否进行批量更新
 
+在batchedEventUpdates方法中，
+
+在同步操作的时候是采用批量更新的，在异步操作的时候是采用同步执行的。在异步环境下会打破批量更新模式。利用`unstable_batchedUpdates`可以手动开启批量更新。
 ### 函数组件中的 state
 
 ### useState
