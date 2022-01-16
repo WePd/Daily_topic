@@ -73,11 +73,20 @@ enqueueSetState 作用实际很简单，就是创建一个 update ，然后放�
 
 
 - React 是如何实现批量更新的？
-在 React 事件执行之前通过 isBatchingEventUpdates=true 打开开关，开启事件批量更新，当该事件结束，再通过 isBatchingEventUpdates = false; 关闭开关，然后在 scheduleUpdateOnFiber 中根据这个开关来确定是否进行批量更新
+
+在batchedEventUpdates方法中。
+在 React 事件执行之前通过 `isBatchingEventUpdates=true` 打开开关，开启事件批量更新，当该事件结束，再通过 `isBatchingEventUpdates = false`; 关闭开关，然后在 `scheduleUpdateOnFiber` 中根据这个开关来确定是否进行批量更新
 
 在batchedEventUpdates方法中，
 
 在同步操作的时候是采用批量更新的，在异步操作的时候是采用同步执行的。在异步环境下会打破批量更新模式。利用`unstable_batchedUpdates`可以手动开启批量更新。
+
+在实际工作中，unstable_batchedUpdates 可以用于 Ajax 数据交互之后，合并多次 setState，或者是多次 useState 。原因很简单，所有的数据交互都是在异步环境下，如果没有批量更新处理，一次数据交互多次改变 state 会促使视图多次渲染
+
+- 如何更新优先级？
+React-dom 提供了 flushSync ，flushSync 可以将回调函数中的更新任务，放在一个较高的优先级中
+flushSync 中的 setState > 正常执行上下文中 setState > setTimeout > Promise 中的 setState。
+
 ### 函数组件中的 state
 
 ### useState
@@ -118,6 +127,28 @@ const handleClick=()=>{
    setNumber((state)=> state + 1)  // state - > 8 + 1 = 9
 }
 ```
+dispatch的更新特点：
+> 在函数组件中，dispatch的效果个类组件是一样的，但是有一点要注意，就是当调用改变state的dispatch时，在本次的函数执行上下文中是拿不到最新的state值的。
+```js
+const [ number , setNumber ] = React.useState(0)
+const handleClick = ()=>{
+    ReactDOM.flushSync(()=>{
+        setNumber(2) 
+        console.log(number) 
+    })
+    setNumber(1) 
+    console.log(number)
+    setTimeout(()=>{
+        setNumber(3) 
+        console.log(number)
+    })   
+}
+// 0 0 0
+```
+原因是因为函数组件的执行就是函数的执行，在函数的一次执行过程中函数内部的变量重新声明，所有改变的state，只有在下一次函数组件执行时才会被跟新。
+
+useState是有浅比较的规则，根据对比的结构再决定是否更新组件视图。
+若是想改变的化可以利用浅拷贝重新`dispatch({...state})`
 
 #### 监听 state
 
