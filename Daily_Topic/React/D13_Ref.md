@@ -53,9 +53,9 @@ useRef 和 createRef 的底层是差不多的，但是有一点不一样。就�
    ![](img/ref_fun.png)
 3. Ref 是一个对象
    获取到的是一个对象，用 current 属性。
-   ![](img/ref_obj.png)
-
-#### Ref 高阶使用
+			
+	 、；
+   ![](img/ref_obj.png)  9 hhhhh
 
 1. forwardRef 转发 Ref
    forwardRef 初衷是解决 ref 不能跨层级捕捉和传递的问题。forwardRef 接受了父级元素标记的 ref 信息，并把它转发下去，使得子组件可以通过 props 来接受到上一层级或者是更上层级的 ref，
@@ -105,7 +105,7 @@ export default class GrandFather extends React.Component {
 #### 组件通信
 
 1. 类组件 Ref
-
+类组件可以通过 ref 直接获取组件实例，实现组件通信
 ```js
 import React, { Component, useRef, useState } from 'react'
 
