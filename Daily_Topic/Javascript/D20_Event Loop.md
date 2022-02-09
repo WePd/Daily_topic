@@ -1,3 +1,5 @@
+javascrit 是单线程，但是一些耗时的任务就会带来进程的阻塞问题。 js 有两种模式： 同步模式和异步模式在异步模式下就会创建宏任务和微任务
+
 ### Event Loop 是什么
 
 `Event loop`就是事件循环，浏览器或 Node 的一种解决 javaScript 单线程运行时不会阻塞的一种机制，也就是我们经常使用异步的原理
@@ -6,13 +8,13 @@
 
 在 javascript 中，任务被分为两类，一种叫宏任务(MacroTask)，另一种叫微任务(MicroTask)
 
-- 宏任务(MacroTask)
+- 宏任务(MacroTask) 宏任务是由浏览器或者 Node 发起的。
 
   宏任务包括：`script全部代码、setTimeout、setInterval、setImmediate`（浏览器暂时不支持，只有 IE10 支持)、I/O、`UI Rendering`
 
-- 微任务(MicroTask)
+- 微任务(MicroTask) 由 JS 自身发起
 
-  `Process.nextTick(Node独有)、Promise、MutationObserve`
+  `Process.nextTick(Node独有)、Promise、MutationObserve、queueMicroTask`
 
 ### 浏览器中的 Event Loop
 
