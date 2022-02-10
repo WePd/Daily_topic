@@ -81,11 +81,48 @@
 //   console.log(value); // 1 第二输出
 // });
 
-const promise1 = new Promise((resolve, reject) => {
-  resolve(
-    new Promise((resolve, reject) => {
-      reject("123");
-    })
-  );
-});
-promise1.then((res) => console.log(res));
+// const promise1 = new Promise((resolve, reject) => {
+//   resolve(
+//     new Promise((resolve, reject) => {
+//       reject("123");
+//     })
+//   );
+// });
+// promise1.then((res) => console.log(res));
+
+const myPromise = require("./PromiseAction")
+const promise = new myPromise((resolve, reject) => {
+  // setTimeout(() => {
+  //   resolve("success")
+  // }, 1000)
+  resolve("success")
+  // reject("err")
+})
+
+function other() {
+  return new myPromise((resolve, reject) => {
+    resolve("other")
+  })
+}
+promise
+  .then((value) => {
+    console.log(1)
+    console.log("resolve", value)
+    return other()
+  })
+  .then((value) => {
+    console.log(2)
+    console.log("resolve", value)
+  })
+// promise.then((value) => {
+//   console.log(2)
+//   console.log("resolve", value), (reason) => console.log("reject", reason)
+// })
+// promise.then((value) => {
+//   console.log(3)
+//   console.log("resolve", value), (reason) => console.log("reject", reason)
+// })
+// promise.then((value) => {
+//   console.log(4)
+//   console.log("resolve", value), (reason) => console.log("reject", reason)
+// })
