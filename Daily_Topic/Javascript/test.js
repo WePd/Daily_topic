@@ -45,14 +45,108 @@
 // a[b] = "li"
 // a[c] = "q"
 // console.log(a[b])
-var a = 0,
-  b = 0
-function A(a) {
-  A = function (b) {
-    alert(a + b++)
+// var a = 0,
+//   b = 0
+// function A(a) {
+//   A = function (b) {
+//     alert(a + b++)
+//   }
+//   alert(a)
+// }
+
+// A(1)
+// A(2)
+
+// let arr = [
+//   { id: 1, name: "部门1", pid: 0 },
+//   { id: 2, name: "部门2", pid: 1 },
+//   { id: 3, name: "部门3", pid: 1 },
+//   { id: 4, name: "部门4", pid: 3 },
+//   { id: 5, name: "部门5", pid: 4 },
+// ]
+
+// function arrayToTree(items) {
+//   //保存结果
+//   const result = []
+//   // 转化为map
+//   const itemMap = {}
+
+//   // 先将数组转化为map
+//   for (const item of items) {
+//     itemMap[item.id] = { ...item, children: [] }
+//   }
+//   for (const item of items) {
+//     const itemTree = itemMap[item.id]
+//     if (item.pid === 0) {
+//       result.push(itemTree)
+//     } else {
+//       if (!itemMap[item.pid]) {
+//         itemMap[item.pid] = {
+//           children: [],
+//         }
+//       }
+//       itemMap[item.pid].children.push(itemTree)
+//     }
+//   }
+//   return result
+// }
+// console.log(arrayToTree(arr))
+
+// const p = { name: "lll" }
+// let o = Object.create(p)
+// // console.log(o.prototype.hasOwnProperty("name"))
+// console.log(o.name)
+
+// let al1 = {
+//   length: 4,
+//   0: 0,
+//   1: 1,
+//   3: 3,
+//   7: 4,
+//   5: 5,
+// }
+
+// const result = []
+// for (let item of al1) {
+//   result.push(item)
+// }
+
+// console.log(result)
+
+// const arr = [1, [2, 10, [3, [4, 8]]]]
+// 扩展符
+// function flant(arr) {
+//   while (arr.some((item) => Array.isArray(item))) {
+//     arr = [].concat(...arr)
+//   }
+//   return arr
+// }
+
+// reduce
+// function flant(arr) {
+//   return arr.reduce(
+//     (pre, cur) => pre.concat(Array.isArray(cur) ? flant(cur) : cur),
+//     []
+//   )
+// }
+
+// console.log(flant(arr))
+
+class Person {
+  constructor(name, age) {
+    this.name = name
+    this.age = age
   }
-  alert(a)
+}
+class p extends Person {
+  constructor(name, age) {
+    super(name, age)
+    this.say = function say() {
+      console.log(new.target)
+    }
+  }
 }
 
-A(1)
-A(2)
+const p1 = new p("lili", 12)
+console.log(p1)
+p1.say()

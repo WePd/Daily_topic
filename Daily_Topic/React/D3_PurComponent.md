@@ -12,3 +12,5 @@ PurComponent 是对 Component 的性能提升。两者之前也是有区别的�
 - PureComponent 不仅会影响本身，而且会影响子组件。
 - 如果 prop 和 state 每次都会变，那么使用 Component 的效率会更好，因为浅比较也是需要时间的。
 - 若有 shouldComponentUpdate，则执行 shouldComponentUpdate，若没有 shouldComponentUpdate 方法会判断是不是 PureComponent，若是，进行浅比较
+
+###
