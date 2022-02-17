@@ -132,21 +132,88 @@
 
 // console.log(flant(arr))
 
-class Person {
-  constructor(name, age) {
-    this.name = name
-    this.age = age
-  }
-}
-class p extends Person {
-  constructor(name, age) {
-    super(name, age)
-    this.say = function say() {
-      console.log(new.target)
-    }
-  }
-}
+// class Person {
+//   constructor(name, age) {
+//     this.name = name
+//     this.age = age
+//   }
+// }
+// class p extends Person {
+//   constructor(name, age) {
+//     super(name, age)
+//     this.say = function say() {
+//       console.log(new.target)
+//     }
+//   }
+// }
 
-const p1 = new p("lili", 12)
-console.log(p1)
-p1.say()
+// const p1 = new p("lili", 12)
+// console.log(p1)
+// p1.say()
+
+function createSyntheticEvent(Interface: EventInterfaceType)
+{
+  function SyntheticBaseEvent(
+    reactName: string | null,
+    reactEventType: string,
+    targetInst: Fiber,
+    nativeEvent: { [propName: string]: mixed },
+    nativeEventTarget: null | EventTarget,) {
+    this._reactName = reactName;// 事件名字
+    this._targetInst = targetInst; // Fiber 节点
+    this.type = reactEventType;
+    this.nativeEvent = nativeEvent; // 原生事件
+    this.target = nativeEventTarget;
+    this.currentTarget = null;
+  // 初始化 做一些赋值操作
+    for (const propName in Interface) {
+      if (!Interface.hasOwnProperty(propName))
+      {
+        continue;
+      }
+      const normalize = Interface[propName];
+      if (normalize)
+      {
+        this[propName] = normalize(nativeEvent);
+      } else {
+        this[propName] = nativeEvent[propName];
+      }
+    }
+    // 兼容可恶的ie
+    const defaultPrevented = nativeEvent.defaultPrevented != null ? nativeEvent.defaultPrevented : nativeEvent.returnValue === false;
+    if (defaultPrevented) { this.isDefaultPrevented = functionThatReturnsTrue; } else {
+      this.isDefaultPrevented = functionThatReturnsFalse;
+    }
+    // 默认是不冒泡的， 但是react如果调用了阻止冒泡会把这个函数设为functionThatReturnsTrue
+    this.isPropagationStopped = functionThatReturnsFalse;
+    return this;
+  }
+  Object.assign(SyntheticBaseEvent.prototype, {
+    preventDefault: function () {
+      // 掉用的就是原生的浏览器行为
+      this.defaultPrevented = true;
+      const event = this.nativeEvent;
+      if (!event) {
+        return;
+      }
+      if (event.preventDefault)
+      {
+        event.preventDefault();
+      } else if (typeof event.returnValue !== 'unknown') {
+        event.returnValue = false;
+      }
+      this.isDefaultPrevented = functionThatReturnsTrue;
+    },
+    stopPropagation: function () {
+      // 原生的浏览器事件 React 17
+      const event = this.nativeEvent;
+      if (!event) { return; }
+      if (event.stopPropagation) {
+        event.stopPropagation();
+      } else if (typeof event.cancelBubble !== 'unknown') {
+        event.cancelBubble = true;
+      }      // 这就是React 自己在冒泡的时候 函数终止的条件
+      this.isPropagationStopped = functionThatReturnsTrue;
+    },
+    // 不在使用事件池了
+    persist: function () {      // Modern event system doesn't use pooling.    },    isPersistent: functionThatReturnsTrue,  });  return SyntheticBaseEvent;}
