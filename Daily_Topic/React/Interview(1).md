@@ -93,6 +93,8 @@ function deepClone(target, map = new WeakMap()) {
   map.set(target, cloneObj)
   console.log(map)
   for (let k in target) {
+    //for in会遍历对象的原型链
+    //需要hasOwnProperty来判断是否是自身的属性
     if (target.hasOwnProperty(k)) {
       cloneObj[k] = deepClone(target[k], map)
     }
@@ -295,4 +297,19 @@ mutiple(1, 2, 3, 4) // 24
 3. 动态创建 DOM 方式： 动态创建 DOM 标签的方式，可以对文档的加载事件进行监听，当文档加载完成后再动态的创建 script 标签来引入 js 脚本。
 4. 使用 setTimeout 延迟方法： 设置一个定时器来延迟加载js脚本文件
 5. 让 JS 最后加载： 将 js 脚本放在文档的底部，来使 js 脚本尽可能的在最后来加载执行。
+
+```
+
+### JavaScript 为什么要进行变量提升，它导致了什么问题？
+
+```js
+
+```
+
+### for..of 和 for..in 的区别
+
+```js
+for...in 遍历对象获得的是对象的键名， for...of获取的是键值
+for...in适合遍历对象， for...of适合遍历数组、类数组对象，字符串、Set、Map 以及 Generator 对象。
+for...in会遍历对象的原型链
 ```

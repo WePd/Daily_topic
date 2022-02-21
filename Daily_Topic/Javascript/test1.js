@@ -76,6 +76,18 @@
 // console.log("a", a)
 // console.log("b", b)
 
-const { name, age } = { name: "lqy", age: 22 }
-console.log("name", name)
-console.log("age", age)
+// const { name, age } = { name: "lqy", age: 22 }
+// console.log("name", name)
+// console.log("age", age)
+
+let oldPush = Array.prototype.push
+
+function push(...args) {
+  console.log(this)
+  console.log("数据更新")
+  oldPush.call(this, ...args)
+}
+
+const arr = [1, 2, 3]
+push.call(arr, 4, 5)
+console.log(arr)
