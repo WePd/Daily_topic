@@ -101,4 +101,19 @@ useLayoutEffect是再DOM改变之后就同步执行的。要避免useLayoutEffec
 3. 简化state,state里面只写一些需要组件响应它的变动或者需要渲染到试图中的数据才会放到state中。
 4. 不要滥用content,它是可以穿透React.memo或者shouldComponentUpdate的比对的，也就是说，一旦 Context 的 Value 变动，所有依赖该 Context 的组件会全部 forceUpdate.
 5. 通过shouldComponentUpdate生命周期函数来比对 state 和 props, 确定是否要重新渲染。对于函数组件可以使用React.memo包装
+6. 控制组件的纯粹性
+```
+
+### 观察者模式
+
+```js
+观察者模式是指当对象之间存在一对多的关系时，当其中一个对象的状态发生变化，所有依赖他的对象都会收到通知，者就是观察者模式
+
+```
+
+### 发布订阅模式
+
+```js
+基于一个事件（主题）通道，希望接收通知的对象 Subscriber 通过自定义事件订阅主题，被激活事件的对象 Publisher 通过发布主题事件的方式通知各个订阅该主题的
+Subscriber 对象。
 ```

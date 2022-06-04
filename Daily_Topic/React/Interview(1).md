@@ -238,6 +238,18 @@ Object.is() 一般情况下和===的规则相同，但是会处理一些特殊�
 3. 将构造函数内的this指向新对象
 4. 执行构造函数的代码
 5. 若构造函数返回非空对象则返回该对象， 相反，返回刚刚创建的对象
+
+
+
+const muNew = (content, ...args) => {
+  const obj = Object.create(content.prototype)
+  const res = content.apply(obj, args)
+
+  const isObject = typeof res === "object" && res !== null
+  const isFunction = typeof res === "Function"
+
+  return isObject || isFunction ? res : obj
+}
 ```
 
 ### 箭头函数与普通函数的区别
